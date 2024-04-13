@@ -16,5 +16,13 @@
   <body>
     <h1>Hello from Electron renderer!</h1>
     <p>👋</p>
+    <p id="info"></p>
+
+    <!-- <script>
+      const information = document.getElementById('info')
+      information.innerText = `本应用正在使用 Chrome (v${versions.chrome()}), Node.js (v${versions.node()}), 和 Electron (v${versions.electron()})`
+    </script> -->
+    <!-- 为什么预加载脚本需要单独写一个js文件，卸载script标签中为什么不行 -->
+    <script src="./render.js"></script>
   </body>
 </html>
