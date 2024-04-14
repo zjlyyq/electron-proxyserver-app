@@ -17,3 +17,7 @@ Electron 的主进程是一个拥有着完全操作系统访问权限的 Node.js
 BrowserWindow 的预加载脚本运行在具有 HTML DOM 和 Node.js、Electron API 的有限子集访问权限的环境中。
 
 如果你想为渲染器添加需要特殊权限的功能，可以通过 contextBridge 接口定义 全局对象。
+
+### 打包构建
+1. 使用electron-forge
+2. 手动打包：https://www.electronjs.org/zh/docs/latest/tutorial/application-distribution
