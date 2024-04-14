@@ -1,0 +1,18 @@
+body {
+  margin: 10px 30px;
+}
+button {
+  border-radius: 20px;
+  border: 0;
+  height: 40px;
+  width: 100px;
+}
+.msg_content {
+  color: #000;
+  width: 80;
+  margin: 0 auto;
+  min-height: 100;
+  background: #ccc;
+  padding: 20px;
+  border-radius: 10px;
+}
