@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
 const createWindow = () => {
@@ -17,6 +17,14 @@ const createWindow = () => {
 app.whenReady().then(() => {
   createWindow();
 
+  ipcMain.handle('ping', (event, data) => {
+    console.log(`get message from render: ${data}`);
+    return 'pong';
+  })
+  ipcMain.on('msg-from-renderer', (event, arg) => {
+    console.log('msg-from-renderer:', arg); // 输出渲染进程发送的消息
+    event.reply('message-to-renderer', 'Hello from main process!')
+  })
   // 如果没有窗口打开则打开一个窗口 (macOS)
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
