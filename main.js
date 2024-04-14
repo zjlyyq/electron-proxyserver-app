@@ -1,6 +1,12 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const express = require('express');
+const server = express();
 
+server.use('/', express.static('./web/build'));
+server.listen(3000, () => {
+  console.log('server run in port 3000')
+});
 const createWindow = () => {
   const win = new BrowserWindow({
     icon: '/app_icons/icon.png',
@@ -11,8 +17,8 @@ const createWindow = () => {
     }
   })
 
-  win.loadFile('index.html')
-  // win.loadURL('http://localhost:8081')
+  // win.loadFile('./web/build/index.html')
+  win.loadURL('http://localhost:3000')
 }
 
 app.whenReady().then(() => {
