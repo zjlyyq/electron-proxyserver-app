@@ -22,9 +22,20 @@ const createWindow = () => {
       preload: path.resolve(__dirname, './preload.js')
     }
   })
-  // initApp(12345, '192.168.7.1');
-  // win.loadFile('./web/build/index.html')
+  // // initApp(12345, '192.168.7.1');
+  // // win.loadFile('./web/build/index.html')
   win.loadURL('http://localhost:9001')
+  // const win = new BaseWindow({ width: 800, height: 900 })
+
+  // const view1 = new WebContentsView()
+  // win.contentView.addChildView(view1)
+  // view1.webContents.loadURL('http://localhost:9001')
+  // view1.setBounds({ x: 0, y: 0, width: 400, height: 800 })
+
+  // const view2 = new WebContentsView()
+  // win.contentView.addChildView(view2)
+  // view2.webContents.loadURL('http://localhost:9001')
+  // view2.setBounds({ x: 400, y: 0, width: 400, height: 800 })
 }
 
 app.whenReady().then(() => {

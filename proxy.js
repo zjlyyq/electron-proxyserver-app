@@ -19,89 +19,8 @@ app.use(bodyParse.json());
 //   extends: false
 // }));
 
-let GATEWAY_IP = '192.168.7.1';
-const GATEWAY_IP_List = [
-  '192.168.1.1',
-  '192.168.7.1',
-  '192.168.8.1'
-]
-// W5C 静态文件服务
-const staticRoot = path.resolve(__dirname, './static/rt7c/');
-// const w5cRoot = path.resolve(__dirname, 'E:/zjl_in_ezviz/W-NET/FrontEnd/router2.0/branches/W5C_AC_V2.0.0/out/dist');
-// app.get('*', function(req, res, next) {
-//   if (req.url.endsWith('.gz')) {
-//     const filePath = path.join(__dirname, '/static/rt7c', req.url);
-//     console.log(filePath)
-//     fs.readFile(filePath, function(err, data) {
-//       zlib.gunzip(data, function(err, content) {
-//         res.set('Content-Type', 'text/html')
-//         res.send(content.toString());
-//       });
-//     });
-//   } else {
-//     next();
-//   }
-// });
-// app.use('/', expressStaticGzip( staticRoot, { 
-//  // extensions: ['gz','html'],
-//  // setHeaders: function(res, path, stat) {
-//  //   // console.log(res);
-//  //   res.set('Content-Encoding', 'gzip')
-//  // }
-// }));
-
-// app.use('/', expressStaticGzip( w5cRoot, { 
-//   // extensions: ['gz','html'],
-//   // setHeaders: function(res, path, stat) {
-//   //   // console.log(res);
-//   //   res.set('Content-Encoding', 'gzip')
-//   // }
-// }));
-console.log(path.resolve(__dirname, './static/rt7c/'));
-// GET 使用JSON文件
-// app.get(/.*\.(json|cgi)(.*)$/, (req, res, next) => {
-//   try {
-//     let url = req.originalUrl.split('/')[1];
-//     url = url.split('?')[0];
-//     console.log(url);
-//     const bodyTxt = require(path.resolve(__dirname, '../../../api/' + url));
-//     res.send(bodyTxt);
-//   } catch (error) {
-//     console.log(error);
-//     res.send(error);
-//   }
-// })
-//  app.get('/get_device_lng.json', (req, res, next) => {
-//   res.send(`{
-//     "data": {
-//         "Value": {
-//             "user_lng": "zh",
-//             "product_type": "CS-W3Rx-R100-1G8GM",
-//             "countrycode": "EU"
-//         }
-//     }
-// }`);
-//  });
-
-// post 使用JSON文件
-// app.post(/.*\.(json|cgi)(.*)$/, (req, res, next) => {
-//   try {
-//     const url = req.originalUrl.split('/')[1];
-//     console.log(url);
-//     const bodyTxt = require(path.resolve(__dirname, '../../../api/' + url));
-//     res.send(bodyTxt);
-//   } catch (error) {
-//     console.log(error);
-//     res.send(error);
-//   }
-// })
 
 
-
-// const portId = 12345;
-// app.listen(portId, () => {
-//   console.log('Server running in port ' + portId);
-// })
 
 const initApp = (portId, GATEWAY_IP) => {
   app.use('/', expressStaticGzip(path.resolve(__dirname, './web_dist/dist'), { 
@@ -178,7 +97,6 @@ const initApp = (portId, GATEWAY_IP) => {
     try {
       let url = req.originalUrl.split('/')[1];
       url = url.split('?')[0];
-      //  console.log('POST URL：', url);
       // 转发前复制请求头
       const { headers } = req;
       headers.origin = `http://${GATEWAY_IP}`;
