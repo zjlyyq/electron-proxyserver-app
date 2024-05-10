@@ -3,22 +3,26 @@ const path = require('path');
 const express = require('express');
 const server = express();
 
+const { initApp } = require('./proxy');
+
+
 server.use('/', express.static('./web/build'));
 server.listen(3000, () => {
   console.log('server run in port 3000')
 });
+initApp(2333, '192.168.7.233:23456');
 const createWindow = () => {
   const win = new BrowserWindow({
     icon: '/app_icons/icon.png',
     width: 800,
-    height: 600,
+    height: 900,
     webPreferences: {
       preload: path.resolve(__dirname, './preload.js')
     }
   })
-
+  // initApp(12345, '192.168.7.1');
   // win.loadFile('./web/build/index.html')
-  win.loadURL('http://localhost:3000')
+  win.loadURL('http://localhost:2333')
 }
 
 app.whenReady().then(() => {
@@ -31,6 +35,11 @@ app.whenReady().then(() => {
   ipcMain.on('msg-from-renderer', (event, arg) => {
     console.log('msg-from-renderer:', arg); // 输出渲染进程发送的消息
     event.reply('message-to-renderer', 'Hello from main process!')
+  })
+  ipcMain.on('start-serve', (event, cfg) => {
+    console.log('start-serve:', cfg); // 输出渲染进程发送的消息
+    initApp(cfg.port, cfg.proxyIPAddress);
+    event.reply('start-serve-ok')
   })
   // 如果没有窗口打开则打开一个窗口 (macOS)
   app.on('activate', () => {

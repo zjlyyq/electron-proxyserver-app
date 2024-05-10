@@ -12,5 +12,10 @@ contextBridge.exposeInMainWorld('versions', {
     ipcRenderer.on(type, (event, res) => {
       cb && cb(res);
     })
-  }
+  },
+  // startServe: (port, ip) => {
+  //   ipcRenderer.on(type, (event, res) => {
+  //     cb && cb(res);
+  //   })
+  // }
 })

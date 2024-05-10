@@ -22,7 +22,10 @@
     "electron": "^13.6.9"
   },
   "dependencies": {
+    "body-parser": "^1.20.2",
     "electron-squirrel-startup": "^1.0.0",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "express-static-gzip": "^2.1.7",
+    "multiparty": "^4.2.3"
   }
 }
