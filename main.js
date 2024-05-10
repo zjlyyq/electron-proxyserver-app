@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, BaseWindow, WebContentsView  } = require('electron');
 const path = require('path');
 const express = require('express');
 const server = express();
@@ -10,19 +10,21 @@ server.use('/', express.static('./web/build'));
 server.listen(3000, () => {
   console.log('server run in port 3000')
 });
-initApp(2333, '192.168.7.233:23456');
+initApp(9001, '192.168.7.1');
 const createWindow = () => {
   const win = new BrowserWindow({
     icon: '/app_icons/icon.png',
+    // frame: false,
     width: 800,
     height: 900,
+    transparent: true,
     webPreferences: {
       preload: path.resolve(__dirname, './preload.js')
     }
   })
   // initApp(12345, '192.168.7.1');
   // win.loadFile('./web/build/index.html')
-  win.loadURL('http://localhost:2333')
+  win.loadURL('http://localhost:9001')
 }
 
 app.whenReady().then(() => {
