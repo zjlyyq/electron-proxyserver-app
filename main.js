@@ -2,29 +2,30 @@ const { app, BrowserWindow, ipcMain, BaseWindow, WebContentsView  } = require('e
 const path = require('path');
 const express = require('express');
 const server = express();
-
+const { spawn } = require('child_process');
 const { initApp } = require('./proxy');
 
 
-server.use('/', express.static('./web/build'));
-server.listen(3000, () => {
-  console.log('server run in port 3000')
-});
-initApp(9001, '192.168.7.1');
+// server.use('/', express.static('./web/build'));
+// server.listen(3000, () => {
+//   console.log('server run in port 3000')
+// });
+// initApp(9001, '192.168.5.1');
 const createWindow = () => {
   const win = new BrowserWindow({
     icon: '/app_icons/icon.png',
     // frame: false,
     width: 800,
     height: 900,
-    transparent: true,
+    // transparent: true,
     webPreferences: {
       preload: path.resolve(__dirname, './preload.js')
     }
   })
   // // initApp(12345, '192.168.7.1');
   // // win.loadFile('./web/build/index.html')
-  win.loadURL('http://localhost:9001')
+  // win.loadURL('http://localhost:9001')
+  win.loadURL('http://localhost:3000')
   // const win = new BaseWindow({ width: 800, height: 900 })
 
   // const view1 = new WebContentsView()
@@ -49,10 +50,25 @@ app.whenReady().then(() => {
     console.log('msg-from-renderer:', arg); // 输出渲染进程发送的消息
     event.reply('message-to-renderer', 'Hello from main process!')
   })
+  let child = null;
   ipcMain.on('start-serve', (event, cfg) => {
     console.log('start-serve:', cfg); // 输出渲染进程发送的消息
-    initApp(cfg.port, cfg.proxyIPAddress);
+    try {
+        child = spawn('node', ['proxy.js', '--port',cfg.port, '--ip', cfg.proxyIPAddress]);
+    } catch (error) {
+        
+    }
+    // initApp(cfg.port, cfg.proxyIPAddress);
     event.reply('start-serve-ok')
+  })
+  ipcMain.on('stop-serve', (event) => {
+    try {
+        child.kill();
+        console.log('stop succeed')
+        event.reply('stop-serve-ok');
+    } catch (error) {
+        
+    }
   })
   // 如果没有窗口打开则打开一个窗口 (macOS)
   app.on('activate', () => {

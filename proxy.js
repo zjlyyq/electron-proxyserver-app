@@ -223,6 +223,19 @@ const initApp = (portId, GATEWAY_IP) => {
 //   // app.close();
 // }, 3 * 1000)
 
+// script.js
+console.log(process.argv); 
+/*
+  '/Users/jialuzhang/.nvm/versions/node/v14.21.3/bin/node',
+  '/Users/jialuzhang/MyCode/electron_playground/electron-proxyserver-app/proxy.js',
+  '--port',
+  '32',
+  '--ip',
+  '192.168.7.1'
+*/
+if (process.argv.length > 5) {
+    initApp(process.argv[3], process.argv[5])
+}
 module.exports = { app, initApp }
 
 
