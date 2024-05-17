@@ -14,14 +14,15 @@ const expressStaticGzip = require('express-static-gzip');
 const app = express();
 // const mock = require('../mock');
 //  mock(app);
-app.use(bodyParse.json());
+// app.use(bodyParse.json());
 // app.use(bodyParse.urlencoded({
 //   extends: false
 // }));
 
 
 
-
+// 配置中间件，强制解析请求体为字符串
+app.use(bodyParse.text({ type: '*/*' }));
 const initApp = (portId, GATEWAY_IP) => {
   app.use('/', expressStaticGzip(path.resolve(__dirname, './web_dist/dist'), { 
     extensions: ['gz','html'],
@@ -101,7 +102,8 @@ const initApp = (portId, GATEWAY_IP) => {
       const { headers } = req;
       headers.origin = `http://${GATEWAY_IP}`;
       headers.referer = `http://${GATEWAY_IP}`;
-      headers.host = `http://${GATEWAY_IP}`;
+      headers.host = `${GATEWAY_IP}`;
+      headers['content-type'] = `application/json`;
       //  console.log('请求头：', headers);
       const options = {
         hostname: GATEWAY_IP,
@@ -111,7 +113,7 @@ const initApp = (portId, GATEWAY_IP) => {
         headers: Object.assign({}, headers),
         timeout: 60 * 1000
       };
-      let postBody = JSON.stringify(req.body);
+      let reqBody = req.body;
       let resTxt = '';
       if (headers['content-type'].includes('multipart/form-data')) {
         const boundaryStr = '----W3X' + Date.now();  // 自定义边界字符串
@@ -205,7 +207,7 @@ const initApp = (portId, GATEWAY_IP) => {
         console.error(error);
         res.send(error);
       })
-      deviceReq.write(postBody);
+      deviceReq.write(reqBody);
       deviceReq.end();
     } catch (error) {
       console.log(error);
