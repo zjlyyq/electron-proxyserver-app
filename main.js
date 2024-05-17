@@ -6,10 +6,10 @@ const { spawn } = require('child_process');
 const { initApp } = require('./proxy');
 
 
-// server.use('/', express.static('./web/build'));
-// server.listen(3000, () => {
-//   console.log('server run in port 3000')
-// });
+server.use('/', express.static('./web/build'));
+server.listen(3000, () => {
+  console.log('server run in port 3000')
+});
 // initApp(9001, '192.168.5.1');
 const createWindow = () => {
   const win = new BrowserWindow({
