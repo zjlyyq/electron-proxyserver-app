@@ -5,11 +5,12 @@ const server = express();
 const { spawn } = require('child_process');
 const { initApp } = require('./proxy');
 
-
+/**
 server.use('/', express.static('./web/build'));
 server.listen(3000, () => {
   console.log('server run in port 3000')
 });
+ */
 // initApp(9001, '192.168.5.1');
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -17,6 +18,9 @@ const createWindow = () => {
     // frame: false,
     width: 800,
     height: 900,
+    webPreferences: {
+      devTools: true
+    },
     // transparent: true,
     webPreferences: {
       preload: path.resolve(__dirname, './preload.js')
@@ -37,6 +41,11 @@ const createWindow = () => {
   // win.contentView.addChildView(view2)
   // view2.webContents.loadURL('http://localhost:9001')
   // view2.setBounds({ x: 400, y: 0, width: 400, height: 800 })
+
+  win.once('ready-to-show', () => {
+    win.webContents.openDevTools();
+    win.show();
+  });
 }
 
 app.whenReady().then(() => {
@@ -52,19 +61,20 @@ app.whenReady().then(() => {
   })
   let child = null;
   ipcMain.on('start-serve', (event, cfg) => {
-    console.log('start-serve:', cfg); // 输出渲染进程发送的消息
+    console.log('-------- start-serve -------------', cfg); // 输出渲染进程发送的消息
     try {
-        child = spawn('node', ['proxy.js', '--port',cfg.port, '--ip', cfg.proxyIPAddress]);
+      child = spawn('node', ['proxy.js', '--port',cfg.port, '--ip', cfg.proxyIPAddress]);
+      event.reply('start-serve-ok', Date.now())
+      console.log('-------- start-serve-ok -------------'); // 输出渲染进程发送的消息
     } catch (error) {
-        
+      event.reply('start-serve-fail')
     }
     // initApp(cfg.port, cfg.proxyIPAddress);
-    event.reply('start-serve-ok')
   })
   ipcMain.on('stop-serve', (event) => {
     try {
         child.kill();
-        console.log('stop succeed')
+        console.log('-------- stop-serve -------------')
         event.reply('stop-serve-ok');
     } catch (error) {
         

@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-
+import { Grid, Button, TextField, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import './Proxy.css';
 export default class ProxySetting extends React.Component {
   constructor(props) {
     super(props);
@@ -36,7 +38,7 @@ export default class ProxySetting extends React.Component {
 
   componentDidMount() {
     console.log('componentDidMount')
-    window.versions.listen('stop-serve-ok' , (data) => {
+    window?.versions?.listen && window.versions.listen('stop-serve-ok' , (data) => {
       console.log('stop-serve-ok callback called');
       this.setState({
         status: 'stop',
@@ -44,7 +46,7 @@ export default class ProxySetting extends React.Component {
       })
     })
 
-    window.versions.listen('start-serve-ok' , (data) => {
+    window?.versions?.listen && window.versions.listen('start-serve-ok' , (data) => {
       console.log('start-serve-ok callback called');
       const startTime = Date.now();
       this.setState({
@@ -69,16 +71,33 @@ export default class ProxySetting extends React.Component {
 
   render() {
     return (
-      <div>
-        目标端口：<input value={this.state.port} onChange={this.editHost.bind(this)}/>
-        本机主机：<input value={this.state.proxyIPAddress} onChange={this.editAddress.bind(this)}/>
-        <p>
-          <button onClick={this.startServe}>代理启动</button>
-          <button onClick={this.stopServe}>代理结束</button>
-        </p>
+      <div style={{width: '100%', height: '90%', paddingTop: 40}}>
+        <Grid container spacing={1} style={{paddingLeft: 30, paddingRight: 30}}>
+          <Grid item xs={4}>
+            <TextField  value={this.state.port} label="本机端口" onChange={this.editHost.bind(this)} style={{width: "100%"}}/>
+          </Grid>
+          <Grid item xs={8}>
+            <TextField  value={this.state.proxyIPAddress} label="目标地址" onChange={this.editAddress.bind(this)} style={{width: "100%"}}/>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <Button onClick={this.startServe}>代理启动</Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button onClick={this.stopServe}>代理结束</Button>
+          </Grid>
+        </Grid>
         {
           this.state.status === 'running' && 
-          <p>运行时间: {this.state.runningTime}</p>
+          <Grid container spacing={1} style={{paddingLeft: 30, paddingRight: 30}}>
+            <Grid item xs={4}>
+              <p className='runText'>运行时间: </p>
+            </Grid>
+            <Grid item xs={8}>
+              <p className='runText runTime'>{this.state.runningTime} </p>
+            </Grid>
+          </Grid>
         }
       </div>
     )
