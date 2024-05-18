@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('versions', {
   ping: () => ipcRenderer.invoke('ping', 'xxx'),
   send: (type, data) => ipcRenderer.send(type, data),
   listen: (type, cb) => {
+    ipcRenderer.removeAllListeners(type);
     ipcRenderer.on(type, (event, res) => {
       cb && cb(res);
     })
