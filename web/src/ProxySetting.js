@@ -15,33 +15,43 @@ export default class ProxySetting extends React.Component {
 
   editHost(e, val) {
     this.setState({
-      ...this.state,
       port: e.target.value
     })
   }
 
   editAddress(e, val) {
     this.setState({
-      ...this.state,
       proxyIPAddress: e.target.value
     })
   }
-  stopServe() {
+  stopServe = () => {
     window.versions.send('stop-serve');
+  }
+  startServe = () => {
+    console.log('startServer click')
+    window.versions.send('start-serve', {
+      ...this.state
+    });
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount')
     window.versions.listen('stop-serve-ok' , (data) => {
+      console.log('stop-serve-ok callback called');
       this.setState({
         status: 'stop',
         runningTime: 0
       })
     })
-  }
-  startServe() {
+
     window.versions.listen('start-serve-ok' , (data) => {
+      console.log('start-serve-ok callback called');
       const startTime = Date.now();
       this.setState({
         status: 'running',
         runningTime: 0
       })
+      console.log('start-serve-ok', 'status='+this.state.status, data)
       const refresh = () => {
         const now = Date.now();
         this.setState({
@@ -49,17 +59,12 @@ export default class ProxySetting extends React.Component {
         })
         if (this.state.status === 'running') {
           window.requestAnimationFrame(refresh);
+        } else {
+          console.log(`refresh loop: status = ${this.state.status} offsetTime = ${now - startTime}`)
         }
       }
       window.requestAnimationFrame(refresh)
     })
-    window.versions.send('start-serve', {
-      ...this.state
-    });
-  }
-
-  componentDidMount() {
-
   }
 
   render() {
@@ -68,8 +73,8 @@ export default class ProxySetting extends React.Component {
         目标端口：<input value={this.state.port} onChange={this.editHost.bind(this)}/>
         本机主机：<input value={this.state.proxyIPAddress} onChange={this.editAddress.bind(this)}/>
         <p>
-          <button onClick={this.startServe.bind(this)}>代理启动</button>
-          <button onClick={this.stopServe.bind(this)}>代理结束</button>
+          <button onClick={this.startServe}>代理启动</button>
+          <button onClick={this.stopServe}>代理结束</button>
         </p>
         {
           this.state.status === 'running' && 
