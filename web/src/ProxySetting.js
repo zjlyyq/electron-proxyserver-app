@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import { Grid, Button, TextField, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import PlayArrow from '@mui/icons-material/PlayArrow';
+import StopCircle from '@mui/icons-material/StopCircle';
+
 import './Proxy.css';
 export default class ProxySetting extends React.Component {
   constructor(props) {
@@ -76,16 +79,15 @@ export default class ProxySetting extends React.Component {
           <Grid item xs={4}>
             <TextField  value={this.state.port} label="本机端口" onChange={this.editHost.bind(this)} style={{width: "100%"}}/>
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={6}>
             <TextField  value={this.state.proxyIPAddress} label="目标地址" onChange={this.editAddress.bind(this)} style={{width: "100%"}}/>
           </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Button onClick={this.startServe}>代理启动</Button>
-          </Grid>
-          <Grid item xs={6}>
-            <Button onClick={this.stopServe}>代理结束</Button>
+          <Grid item xs={2} style={{textAlign: 'right'}}>
+            {
+              this.state.status === 'running' ? 
+              <Button onClick={this.stopServe} variant="outlined" color='error' startIcon={<StopCircle/>}>代理停止</Button> :
+              <Button onClick={this.startServe} variant="contained" startIcon={<PlayArrow/>}>代理启动</Button>
+            }
           </Grid>
         </Grid>
         {
