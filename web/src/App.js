@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ProxySetting from './ProxySetting';
 import './App.css';
-import { Grid, Button, TextField, AppBar, Toolbar, IconButton, Typography, Drawer } from '@mui/material';
+import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, AppBar, Toolbar, IconButton, Typography, Drawer } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import TuneIcon from '@mui/icons-material/Tune';
+import RouterIcon from '@mui/icons-material/Router';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+// import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 const versions = window.versions;
 
-
+const nameMap = {
+  'ProxySetting': '代理设置',
+  'preview': '预览器'
+}
+const routeMap = {
+  'ProxySetting': ProxySetting,
+  'preview': () => <div>preview</div>
+}
 const darkTheme = createTheme({
   palette: {
     mode: 'light',
@@ -16,11 +26,36 @@ const darkTheme = createTheme({
   },
 });
 function App() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [, setRefresh] = useState(0);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
+  let currentPage = document.location.hash.replace(/#\/?/, "");
+  let CurrentPage = routeMap[currentPage] || (() => <div>hello</div>);
+  const handleLinkClick = (key) => {
+    // window.location.hash = `#${key}`;
+    window.history.pushState(null, "", `/#/${key}`);
+    // setRefresh((prev) => prev + 1);
+  };
+  
+  const DrawerList = (
+    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+      <List>
+        {Object.keys(routeMap).map((path, index) => (
+          <ListItem key={index} disablePadding onClick={() => handleLinkClick(path)}>
+            <ListItemButton>
+              <ListItemIcon>
+                {index % 2 === 0 ? <TuneIcon /> : <RouterIcon />}
+              </ListItemIcon>
+              <ListItemText primary={nameMap[path]} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
   return (
     <div className="App">
       <ThemeProvider  theme={darkTheme}>
@@ -41,9 +76,9 @@ function App() {
             </Typography>
           </Toolbar>
         </AppBar>
-        <ProxySetting></ProxySetting>
+        <CurrentPage />
         <Drawer open={open} onClose={toggleDrawer(false)}>
-
+          {DrawerList}
         </Drawer>
       </ThemeProvider>
     </div>

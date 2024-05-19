@@ -29,7 +29,7 @@ const createWindow = () => {
   // // initApp(12345, '192.168.7.1');
   // // win.loadFile('./web/build/index.html')
   // win.loadURL('http://localhost:9001')
-  win.loadURL('http://localhost:3000')
+  win.loadURL('http://localhost:3000/#/ProxySetting')
   // const win = new BaseWindow({ width: 800, height: 900 })
 
   // const view1 = new WebContentsView()
@@ -43,7 +43,7 @@ const createWindow = () => {
   // view2.setBounds({ x: 400, y: 0, width: 400, height: 800 })
 
   win.once('ready-to-show', () => {
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
     win.show();
   });
 }
